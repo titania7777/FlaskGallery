@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href={{ url_for("static", filename="bootstrap-4.5.2/css/bootstrap.css") }}>
+    <style>
+      body {
+        background: #ffffff;
+        margin: 0px;
+        padding: 0px;
+      }
+      
+      #move {
+        display: inline-block;
+        border-bottom: 2px solid black;
+        padding-top: 0px;
+        padding-bottom: 2px;
+      }
+    </style>
+    <title>{{ title }}</title>
+    </head>
+    <body>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color:#ffffff">
+        <div class="container">
+            <a href="/"><img src={{ url_for("static", filename="logo/logo.gif") }} width="200"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <ul class="navbar-nav ml-lg-auto" id="topMenu">
+                    <li class="nav-item">
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/">EXHIBITION<span style="font-size: 25px"></span></a>
+                    </li>&nbsp;
+                    <li class="nav-item">
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/rental">RENTAL<span style="font-size: 25px">&</span>BUY</a>
+                    </li>&nbsp;
+                    <li class="nav-item">
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/ask">ask<span style="font-size: 25px"></span></a>
+                    </li>&nbsp;
+                    <li class="nav-item">
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/about">ABOUT KIMJINHO<span style="font-size: 25px"></span></a>
+                    </li>&nbsp;
+                    {% if login %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/logout">Logout<span style="font-size: 25px"></span></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/login">Login<span style="font-size: 25px"></span></a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br />
+    <br />
+    <br />
+    <br />
+    {% block body %}
+    {% endblock %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src={{ url_for("static", filename="bootstrap-4.5.2/js/jquery-3.5.1.js") }}></script>
+    <script src={{ url_for("static", filename="bootstrap-4.5.2/js/bootstrap.js") }}></script>
+    <script type="text/javascript">
+        $("#topMenu > li > a").mouseenter(function () {
+            $(this).animate({
+                paddingBottom: '15px',
+                borderBottom: '3px solid black'
+            }, "fast");
+        });
+        
+        $("#topMenu > li > a").mouseleave(function () {
+            $(this).animate({
+                paddingBottom: '2px',
+                borderBottom: '1px solid black'
+            });
+        });
+    </script>
+    </body>
+</html>

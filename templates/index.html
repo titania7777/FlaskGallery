@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+    <div class="row text-center text-lg-left">
+    {% for image in images %}
+    <div class="col-lg-2 col-md-4 col-6" style="padding-bottom:30px">
+        <a href="/Post?pid=347&page=1">
+            <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image }} alt="">
+        </a>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
