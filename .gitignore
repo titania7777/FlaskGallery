@@ -1,6 +1,5 @@
 # ignore images
 /static/images
-/static/logo
 
 # ignore pycache
 __pycache__
