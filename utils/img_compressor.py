@@ -14,3 +14,10 @@ def remove_temp(file):
     compressed = os.path.join(img_root_path, 'temp_' + file)
     os.remove(original)
     os.rename(original, compressed)
+
+def remove_image(filename):
+    os.remove(filename)
+
+def img_compressor_byte(byte, filename, quality=75):
+    picture = Image.open(byte)
+    picture.save(os.path.join(img_root_path, filename), optimize=True, quality=quality)

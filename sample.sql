@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS `gallery`;
+
+USE `gallery`;
+
+DROP TABLE IF EXISTS `post_gallery`;
+CREATE TABLE `post_gallery`(
+    `pgid` INT(40) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `image` VARCHAR(255) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `created` DATETIME NOT NULL,
+    `updated` DATETIME NOT NULL)CHARSET=utf8;
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`(
+    `root` BOOL NOT NULL,
+    `email` VARCHAR(128) NOT NULL PRIMARY KEY,
+    `password` VARCHAR(128) NOT NULL)CHARSET=utf8;

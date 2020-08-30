@@ -16,6 +16,9 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
+        {% if not page_config['check'] %}
+        <h4 style="color: red;">account information is not matched !!</h4>
+        {% endif %}
     </form>
 </div>
 {% endblock %}

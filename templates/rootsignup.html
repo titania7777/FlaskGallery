@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+    <form method="post">
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" name="email">
+                <small class="form-text text-muted">this page is makes for root account, so please don't forget your account.</small>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label>Password Check</label>
+                <input type="password" class="form-control" name="passwordcheck">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">SignUp</button>
+        {% if not page_config['check'] %}
+        <h4 style="color: red;">Password is different !!</h4>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

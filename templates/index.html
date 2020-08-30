@@ -2,13 +2,27 @@
 {% block body %}
 <div class="container">
     <div class="row text-center text-lg-left">
-    {% for image in images %}
-    <div class="col-lg-2 col-md-4 col-6" style="padding-bottom:30px">
-        <a href="/Post?pid=347&page=1">
-            <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image }} alt="">
-        </a>
-    </div>
+    {% if page_config['images']|length > 0 %}
+        {% for image in page_config['images'] %}
+        <form method="POST" class="col-lg-2 col-md-4 col-6" style="padding-bottom:30px">
+            <a href="/Post?pid=347&page=1">
+                <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image[1] }} alt="">
+            </a>
+            {% if page_config['login'] == 'i am root' %}
+                <button type="submit" class="btn btn-primary" name='action' value='modify'>Modify</button>
+                <button type="submit" class="btn btn-danger" name='action'  value='delete'>delete</button>
+                <input type="hidden" name="image_id" value={{ image[0] }}>
+                <input type="hidden" name="image_name" value={{ image[1] }}>
+            {% endif %}
+        </form>
     {% endfor %}
+    {% else %}
+        {% if page_config['first'] %}
+            <h1>hello !! your first root user, so at first make root account then upload images<a href="/rootsignup">make account</a></h1>
+        {% else %}
+            <h1>Oops there is no images, would you upload the first image ??<a href="/post/write">upload first image</a></h1>
+        {% endif %}
+    {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="shortcut icon" href={{ url_for("static", filename="favicon/favicon.ico") }} type="image/x-icon"/>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href={{ url_for("static", filename="bootstrap-4.5.2/css/bootstrap.css") }}>
     <style>
@@ -21,12 +21,12 @@
         padding-bottom: 2px;
       }
     </style>
-    <title>{{ title }}</title>
+    <title>{{ page_config['title'] }}</title>
     </head>
     <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color:#ffffff">
         <div class="container">
-            <a href="/"><img src={{ url_for("static", filename="logo/logo.gif") }} width="200"></a>
+            <a href="/"><img src={{ url_for("static", filename="logo/logo.PNG") }} width="270"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <ul class="navbar-nav ml-lg-auto" id="topMenu">
@@ -34,18 +34,17 @@
                         <a class="nav-link" id="move" style="font-size: 14px" href="/">EXHIBITION<span style="font-size: 25px"></span></a>
                     </li>&nbsp;
                     <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/rental">RENTAL<span style="font-size: 25px">&</span>BUY</a>
+                        <a class="nav-link" id="move" style="font-size: 14px" href="/board">Board<span style="font-size: 25px"></span></a>
                     </li>&nbsp;
-                    <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/ask">ask<span style="font-size: 25px"></span></a>
-                    </li>&nbsp;
-                    <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/about">ABOUT KIMJINHO<span style="font-size: 25px"></span></a>
-                    </li>&nbsp;
-                    {% if login %}
+                    {% if page_config['login'] is not none %}
                     <li class="nav-item">
                         <a class="nav-link" id="move" style="font-size: 14px" href="/logout">Logout<span style="font-size: 25px"></span></a>
-                    </li>
+                    </li>&nbsp;
+                        {% if page_config['login'] == 'i am root' %}
+                            <li class="nav-item">
+                                <a class="nav-link" id="move" style="font-size: 14px" href="/post/write">Write<span style="font-size: 25px"></span></a>
+                            </li>
+                        {% endif %}
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" id="move" style="font-size: 14px" href="/login">Login<span style="font-size: 25px"></span></a>
@@ -59,8 +58,11 @@
     <br />
     <br />
     <br />
-    {% block body %}
-    {% endblock %}
+    {% if not page_config['db'] %}
+    <div class="container">
+        <h1 style="color: red;">can't connect to database !!</h1>
+    </div>
+    {% endif %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src={{ url_for("static", filename="bootstrap-4.5.2/js/jquery-3.5.1.js") }}></script>
@@ -80,5 +82,7 @@
             });
         });
     </script>
+    {% block body %}
+    {% endblock %}
     </body>
 </html>
