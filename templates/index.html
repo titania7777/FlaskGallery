@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
 <div class="container">
-    <div class="row text-center text-lg-left">
+    <div class="row text-center">
     {% if page_config['images']|length > 0 %}
         {% for image in page_config['images'] %}
         <form method="POST" class="col-lg-2 col-md-4 col-6" style="padding-bottom:30px">
@@ -9,10 +9,12 @@
                 <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image[1] }} alt="">
             </a>
             {% if page_config['login'] == 'i am root' %}
-                <button type="submit" class="btn btn-primary" name='action' value='modify'>Modify</button>
-                <button type="submit" class="btn btn-danger" name='action'  value='delete'>delete</button>
+            <div>
+                <button type="submit" class="btn-primary" name='action' value='modify'>Modify</button>
+                <button type="submit" class="btn-danger" name='action'  value='delete'>delete</button>
                 <input type="hidden" name="image_id" value={{ image[0] }}>
                 <input type="hidden" name="image_name" value={{ image[1] }}>
+            </div>
             {% endif %}
         </form>
     {% endfor %}

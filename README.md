@@ -32,3 +32,13 @@ run flask and enjoy
 ```
 $ flask run --host='your ip address' --port='accessible port'
 ```
+
+## Sample images
+### image1
+<img align="center" src="images/image1.PNG" width="500">
+
+### image2
+<img align="center" src="images/image2.PNG" width="500">
+
+### image3
+<img align="center" src="images/image3.PNG" width="500">
