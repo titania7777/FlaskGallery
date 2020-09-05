@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block body %}
+<style>
+.center{
+    display : block;
+    margin: auto;
+    width: 600px;
+    max-width: 80%
+}
+</style>
+
+<div class="center">
+    <a style="font-size:20px; color:black;" href={{ "/?page=" + page_config.get("data_page_last_query")|string }}><< Pre</a>
+    <br />
+    <br />
+    <img style="max-width: 100%; display : block; margin: auto; " src={{ "." + page_config.get("data_image")[1] }}/>
+    <br />
+    <br />
+    {% if page_config.get("comm_root_signin") %}
+    <form method="POST" style="padding-bottom:10px;">
+        <div style="text-align: center;">
+            <br/>
+            <button type="submit" class="btn-primary" name='action' value='modify'>Modify</button>
+            <button type="submit" class="btn-danger" name='action'  value='delete'>delete</button>
+            <input type="hidden" name="data_page_last_query" value={{ page_config.get("data_page_last_query") }}>
+        </div>
+    </form>
+    {% endif %}
+    <p style="font-size:18px;">title: {{ page_config.get("data_image")[2] }}</p>
+    <p style="font-size:18px;">created: {{ page_config.get("data_image")[3] }}</p>
+    <p style="font-size:18px;">updated: {{ page_config.get("data_image")[4] }}</p>
+</div>
+{% endblock %}

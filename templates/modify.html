@@ -57,9 +57,10 @@
 }
   </style>
 <div class="container">
+  <a style="font-size:20px; color:black;" href={{ "/?page=" + page_config.get("data_page_last_query")|string }}><< Pre</a>
     <form method="post", enctype="multipart/form-data">
         <div class="file-upload">
-            <button class="btn btn-primary" type="button" onclick="$('.file-upload-input').trigger('click')">Add Image</button>
+            <button class="btn btn-primary" type="button" onclick="$('.file-upload-input').trigger('click')">Modify Image</button>
             <div class="image-upload-wrap">
                 <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" name="image"/>
                 <div class="drag-text">
@@ -68,7 +69,7 @@
             </div>
             
             <div class="file-upload-content">
-                <img class="file-upload-image" src="#" alt="your image" />
+                <img class="file-upload-image" src={{ "." + page_config.get("data_image")[1] }} alt="new image" />
                 <div class="image-title-wrap">
                     <button type="button" onclick="removeUpload()" class="btn btn-danger">Remove <span class="image-title">Uploaded Image</span></button>
                 </div>
@@ -77,7 +78,7 @@
             <div class="form-row">
                 <div class="col-12">
                     <label>Title</label>
-                    <input type="text" class="form-control" name="title" required>
+                    <input type="text" class="form-control" name="title" value={{ page_config.get("data_image")[2] }} required>
                     <small class="form-text text-muted">the title maximum length is 255 characters.</small>
                 </div>
             </div>
@@ -89,6 +90,8 @@
 </div>
 
 <script>
+$('.file-upload-content').show();
+$('.image-upload-wrap').hide();
 function readURL(input) {
     if (input.files && input.files[0]) {
         console.log(input.files[0])

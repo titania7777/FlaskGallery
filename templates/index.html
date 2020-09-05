@@ -2,29 +2,115 @@
 {% block body %}
 <div class="container">
     <div class="row text-center">
-    {% if page_config['images']|length > 0 %}
-        {% for image in page_config['images'] %}
+    {% if page_config.get("data_images")|length > 0 %}
+        {% for image in page_config.get("data_images") %}
         <form method="POST" class="col-lg-2 col-md-4 col-6" style="padding-bottom:30px">
-            <a href="/Post?pid=347&page=1">
+            <a href={{ "/gallerypost/view?image_id=" + image[0]|string + "&" + "page=" + page_config.get("data_page_last_query")|string }}>
                 <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image[1] }} alt="">
             </a>
-            {% if page_config['login'] == 'i am root' %}
+            {% if page_config.get("comm_root_signin") %}
             <div>
+                <br/>
                 <button type="submit" class="btn-primary" name='action' value='modify'>Modify</button>
                 <button type="submit" class="btn-danger" name='action'  value='delete'>delete</button>
                 <input type="hidden" name="image_id" value={{ image[0] }}>
-                <input type="hidden" name="image_name" value={{ image[1] }}>
+                <input type="hidden" name="image_path" value={{ image[1] }}>
             </div>
             {% endif %}
         </form>
     {% endfor %}
     {% else %}
-        {% if page_config['first'] %}
+        {% if page_config.get("comm_root_first") %}
             <h1>hello !! your first root user, so at first make root account then upload images<a href="/rootsignup">make account</a></h1>
         {% else %}
-            <h1>Oops there is no images, would you upload the first image ??<a href="/post/write">upload first image</a></h1>
+            <h1>Oops there is no images, would you upload the first image ??<a href="/gallerypost/write">upload first image</a></h1>
         {% endif %}
     {% endif %}
     </div>
 </div>
+<ul class="pagination justify-content-center mb-4">
+    <li>
+        <a id="p_pp" style="color:slategrey; font-size: large; font-weight: bold;" href="#"><<</a>
+    </li>
+    &nbsp;&nbsp;
+    <li>
+        <a id="p_p" style="color:slategrey; font-size: large; font-weight: bold;" href="#"><</a>
+    </li>
+    &nbsp;&nbsp;
+    <li class="page-item" id="p_n"></li>
+
+    <li>
+        <a id="n_n" style="color:slategrey; font-size: large; font-weight: bold;" href="#">></a>
+    </li>
+    &nbsp;&nbsp;
+    <li>
+        <a id="n_nn" style="color:slategrey; font-size: large; font-weight: bold;" href="#">>></a>
+    </li>
+</ul>
+<script type="text/javascript">
+    document.getElementById('p_p').classList.add('disabled');
+    var range = 2;
+    var current_page = {{ page_config.get("data_page_last_query") }};
+    var n = parseInt((current_page - 1) / range);
+    var last_page = {{ page_config.get("data_page_length") }};
+
+    var start = (range * n) + 1;
+    var stop = (range * n) + range;
+
+    if (start == current_page){
+        document.getElementById('p_pp').setAttribute('href', '/?page=' + start);
+        document.getElementById('p_p').setAttribute('href', '/?page=' + (current_page));
+        if (start != 1){
+            document.getElementById('p_pp').setAttribute('href', '/?page=' + (start - 1));
+            document.getElementById('p_p').setAttribute('href', '/?page=' + (current_page - 1));
+        }
+    }else{
+        if (start == 1)
+            document.getElementById('p_pp').setAttribute('href', '/?page=' + (start));
+        else
+            document.getElementById('p_pp').setAttribute('href', '/?page=' + (start - 1));
+        document.getElementById('p_p').setAttribute('href', '/?page=' + (current_page - 1));
+    }
+
+    if (stop >= last_page){
+        stop = last_page
+        document.getElementById('n_nn').setAttribute('href', '/?page=' + stop);
+        if (stop == current_page )
+            document.getElementById('n_n').setAttribute('href', '/?page=' + (current_page));
+        else
+            document.getElementById('n_n').setAttribute('href', '/?page=' + (current_page + 1));
+    }else{
+        document.getElementById('n_nn').setAttribute('href', '/?page=' + (stop + 1));
+        document.getElementById('n_n').setAttribute('href', '/?page=' + (current_page + 1));
+    }
+
+    var inserthtml = '';
+    for (var i = start; i <= stop; i++)
+    {
+        if (current_page == i)
+        {
+            inserthtml += '<b><a href="/?page=' + i + '">' + i + '</a></b>&nbsp;&nbsp;';
+        } else
+        {
+            inserthtml += '<a href="/?page=' + i + '">' + i + '</a>&nbsp;&nbsp;';
+        }
+    }
+    document.getElementById('p_n').innerHTML = inserthtml;
+    
+    // function getQueryVariable(variable) {
+    //     var query = window.location.search.substring(1);
+    //     var vars = query.split('&');
+    //     for (var i = 0; i < vars.length; i++) {
+    //         var pair = vars[i].split('=');
+    //         if (decodeURIComponent(pair[0]) == variable) {
+    //             return decodeURIComponent(pair[1]);
+    //         }
+    //     }
+    //     return 1;
+    // }
+    
+    // function getCurrentPage() {
+    //     return getQueryVariable("page");
+    // }
+</script>
 {% endblock %}

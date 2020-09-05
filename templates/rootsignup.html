@@ -22,9 +22,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary">SignUp</button>
-        {% if not page_config['check'] %}
-        <h4 style="color: red;">Password is different !!</h4>
-        {% endif %}
+        <h4 style="color: red;">{{ page_config.get("message") }}</h4>
     </form>
 </div>
 {% endblock %}

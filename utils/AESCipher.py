@@ -1,7 +1,7 @@
 import base64
 from Crypto import Random
 from Crypto.Cipher import AES
-from utils.settings import secret_key
+from utils.Settings import secret_key
 
 BS = 16
 pad = lambda s: s + (BS - len(s.encode('utf-8')) % BS) * chr(BS - len(s.encode('utf-8')) % BS)

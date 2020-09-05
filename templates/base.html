@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href={{ url_for("static", filename="favicon/favicon.ico") }} type="image/x-icon"/>
+    <link rel="shortcut icon" href={{ url_for("static", filename=page_config.get("page_favicon")) }} type="image/x-icon"/>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href={{ url_for("static", filename="bootstrap-4.5.2/css/bootstrap.css") }}>
     <style>
@@ -20,34 +20,35 @@
         padding-top: 0px;
         padding-bottom: 2px;
       }
+      
     </style>
-    <title>{{ page_config['title'] }}</title>
+    <title>{{ page_config.get("comm_page_title") }}</title>
     </head>
     <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color:#ffffff">
         <div class="container">
-            <a href="/"><img src={{ url_for("static", filename="logo/logo.PNG") }} width="270"></a>
+            <a href="/"><img src={{ url_for("static", filename=page_config.get("page_logo")) }} width="270"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <ul class="navbar-nav ml-lg-auto" id="topMenu">
                     <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/">EXHIBITION<span style="font-size: 25px"></span></a>
+                        <a class="nav-link" id="move" style="font-size: large" href="/">Exhibition<span style="font-size: 25px"></span></a>
                     </li>&nbsp;
                     <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/board">Board<span style="font-size: 25px"></span></a>
+                        <a class="nav-link" id="move" style="font-size: large" href="/board">Board<span style="font-size: 25px"></span></a>
                     </li>&nbsp;
-                    {% if page_config['login'] is not none %}
+                    {% if page_config.get("comm_user_signin") %}
                     <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/logout">Logout<span style="font-size: 25px"></span></a>
+                        <a class="nav-link" id="move" style="font-size: large" href="/signout">Sign out<span style="font-size: 25px"></span></a>
                     </li>&nbsp;
-                        {% if page_config['login'] == 'i am root' %}
+                        {% if page_config.get("comm_root_signin") %}
                             <li class="nav-item">
-                                <a class="nav-link" id="move" style="font-size: 14px" href="/post/write">Write<span style="font-size: 25px"></span></a>
+                                <a class="nav-link" id="move" style="font-size: large" href="/gallerypost/write">Write<span style="font-size: 25px"></span></a>
                             </li>
                         {% endif %}
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" id="move" style="font-size: 14px" href="/login">Login<span style="font-size: 25px"></span></a>
+                        <a class="nav-link" id="move" style="font-size: large" href="/signin">Sign in<span style="font-size: 25px"></span></a>
                     </li>
                     {% endif %}
                 </ul>
@@ -58,7 +59,7 @@
     <br />
     <br />
     <br />
-    {% if not page_config['db'] %}
+    {% if not page_config.get("info_db_connection") %}
     <div class="container">
         <h1 style="color: red;">can't connect to database !!</h1>
     </div>
@@ -84,5 +85,20 @@
     </script>
     {% block body %}
     {% endblock %}
-    </body>
+    <div class="container">
+        <div class="row text-right">
+            <div class="col-md-12">
+                <a class="btn btn-link" href={{ page_config.get("facebook_url") }}><img src={{ url_for("static", filename=page_config.get("page_sns_facebook")) }} style="width:30px" /></a>
+                <a class="btn btn-link " href={{ page_config.get("insta_url") }}><img src={{ url_for("static", filename=page_config.get("page_sns_insta")) }} style="width:30px" /></a>
+                <a class="btn btn-link" href={{ page_config.get("twitter_url") }}><img src={{ url_for("static", filename=page_config.get("page_sns_twitter")) }} style="width:30px" /></a>
+                <a class="btn btn-link" href={{ page_config.get("kakao_url") }}><img src={{ url_for("static", filename=page_config.get("page_sns_kakao")) }} style="width:30px" /></a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <p style="font-size: large;">{{ page_config.get("page_footer") }}</p>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
