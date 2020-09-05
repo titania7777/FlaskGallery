@@ -28,6 +28,10 @@ add some flask enviorment variables
 $ export FLASK_APP=app.py
 $ export FLASK_ENV=development
 ```
+make images directory in static folder
+```
+$ mkdir images => /flask_gallery/static/images
+```
 run flask and enjoy
 ```
 $ flask run --host='your ip address' --port='accessible port'
