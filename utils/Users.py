@@ -24,7 +24,7 @@ class Users(Connector):
 
     def is_root(self, email):
         sql = "SELECT * FROM users WHERE email=%s"
-        self.cursor.execute(sql, (self, ))
+        self.cursor.execute(sql, (email, ))
         result = self.cursor.fetchone()
         
         if result is None:
@@ -44,11 +44,31 @@ class Users(Connector):
             return True
         else: 
             return False
+    
+    def user_exist(self, email):
+        sql = "SELECT * FROM users WHERE email=%s"
+        self.cursor.execute(sql, (email, ))
+        result = self.cursor.fetchone()
+
+        if result is not None:
+            return True
+        else:
+            return False
 
     def signup(self, root, email, password):
         sql = "INSERT INTO users (root, email, password) values (%s, %s, %s)"
-        self.cursor.execute(sql, (root, email, encrypt(password)))
+        self.cursor.execute(sql, (root, email, encrypt(password), ))
         self.conn.commit()
-        
+
+    def change_password(self, email, password):
+        sql = "UPDATE users SET password=%s WHERE email=%s"
+        self.cursor.execute(sql, (encrypt(password), email, ))
+        self.conn.commit()
+    
+    def delete_user(self, email):
+        sql = "DELETE FROM users where email=%s"
+        self.cursor.execute(sql, (email, ))
+        self.conn.commit()
+
     def __del__(self):
         self.close()

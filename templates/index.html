@@ -6,15 +6,16 @@
         {% for image in page_config.get("data_images") %}
         <form method="POST" class="col-lg-2 col-md-4 col-6" style="padding-bottom:30px">
             <a href={{ "/gallerypost/view?image_id=" + image[0]|string + "&" + "page=" + page_config.get("data_page_last_query")|string }}>
-                <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image[1] }} alt="">
+                <img style="width:150px; height:150px" class="thumbnail img-responsive" src={{ image[2] }} alt="">
             </a>
             {% if page_config.get("comm_root_signin") %}
             <div>
                 <br/>
-                <button type="submit" class="btn-primary" name='action' value='modify'>Modify</button>
-                <button type="submit" class="btn-danger" name='action'  value='delete'>delete</button>
+                <button type="button" class="btn-primary" onclick="buttonfunc('modify');" value="modify">Modify</button>
+                <button type="button" class="btn-danger" onclick="buttonfunc('delete');" value="delete">delete</button>
+                <input type="hidden" name="action" id="action" value="">
                 <input type="hidden" name="image_id" value={{ image[0] }}>
-                <input type="hidden" name="image_path" value={{ image[1] }}>
+                <input type="hidden" name="image_path" value={{ image[2] }}>
             </div>
             {% endif %}
         </form>
@@ -47,6 +48,18 @@
         <a id="n_nn" style="color:slategrey; font-size: large; font-weight: bold;" href="#">>></a>
     </li>
 </ul>
+<script type="text/javascript">
+    function buttonfunc(mode) {
+        document.getElementById("action").value = mode;
+        if (mode == "delete"){
+            if (confirm("Your Really Want Delete This Post?")){
+                document.querySelector('form').submit();
+            }
+        }else{
+            document.querySelector('form').submit();
+        }
+    }
+</script>
 <script type="text/javascript">
     document.getElementById('p_p').classList.add('disabled');
     var range = 2;

@@ -8,9 +8,9 @@ class GalleryPost(Connector):
         super().__init__()
         page_config.set(info_db_connection = self.db_connection)
 
-    def write(self, image, image_path, title, created, updated):
-        sql = "INSERT INTO post_gallery (image, title, created, updated) values (%s, %s, %s, %s)"
-        self.cursor.execute(sql, (image_path, title, created, updated, ))
+    def write(self, image, image_path, title, updated):
+        sql = "INSERT INTO post_gallery (image, title, updated) values (%s, %s, %s)"
+        self.cursor.execute(sql, (image_path, title, updated, ))
         self.conn.commit()
 
         # save image in local
@@ -32,6 +32,11 @@ class GalleryPost(Connector):
 
         # remove image in local
         remove_image(old_image_path)
+    
+    def modify_title(self, image_id, title, updated):
+        sql = "UPDATE post_gallery SET title=%s, updated=%s WHERE pgid=%s"
+        self.cursor.execute(sql, (title, updated, image_id, ))
+        self.conn.commit()
 
     def delete(self, image_id, image_path):
         sql = "DELETE FROM post_gallery WHERE pgid=%s"
@@ -47,7 +52,7 @@ class GalleryPost(Connector):
         return self.read_range(start, last)
 
     def read_range(self, start, last):
-        sql = "SELECT pgid, image, title, created, updated FROM (SELECT @rownumber := @rownumber + 1 AS rownumbers, pg.* FROM post_gallery AS pg, (SELECT @rownumber := 0) row ORDER BY created DESC) AS pg WHERE rownumbers BETWEEN %s AND %s"
+        sql = "SELECT pgid, title, image, created, updated FROM (SELECT @rownumber := @rownumber + 1 AS rownumbers, pg.* FROM post_gallery AS pg, (SELECT @rownumber := 0) row ORDER BY created DESC) AS pg WHERE rownumbers BETWEEN %s AND %s"
         self.cursor.execute(sql, (start, last, ))
         results = self.cursor.fetchall()
         return results

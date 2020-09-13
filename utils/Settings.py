@@ -24,5 +24,5 @@ root_signal = "i am root"
 # database configurations
 host = "localhost"
 database = "gallery"
-user = "user"
+user = "user1"
 password = "Pass12!@#"

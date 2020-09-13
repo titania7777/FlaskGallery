@@ -14,19 +14,19 @@ install mysql 5.7.x version and execute sample.sql file
 ```
 $ sudo mysql < sample.sql
 ```
-and grant permission of gallery database to created user(you can change password and secret_key => check setting.py)
+grant permission on gallery database to created user(you can change password and secret_key => check setting.py)  
 first create user,
 ```
-mysql> CREATE USER 'user'@'localhost' IDENTIFIED BY 'Pass12!@#';
+mysql> CREATE USER 'user1'@'localhost' IDENTIFIED BY 'Pass12!@#';
 ```
 second grant permission,
 ```
-mysql> GRANT ALL PRIVILEGES ON test.* TO 'testuser'@'localhost' WITH GRANT OPTION;
+mysql> GRANT ALL PRIVILEGES ON gallery.* TO 'user1'@'localhost' WITH GRANT OPTION;
 ```
 add some flask enviorment variables
 ```
 $ export FLASK_APP=app.py
-$ export FLASK_ENV=development
+$ export FLASK_ENV=production
 ```
 make images directory in static folder
 ```

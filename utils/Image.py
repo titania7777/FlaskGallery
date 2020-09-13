@@ -20,4 +20,5 @@ def remove_image(filename):
 
 def img_compressor_byte(byte, image_path, quality=75):
     picture = Image.open(byte)
+    picture = picture.convert("RGB")
     picture.save(image_path, optimize=True, quality=quality)

@@ -17,6 +17,10 @@ app.secret_key = encrypt(app_secret_key)
 # session['user_info'] = email
 # session['root_signal'] = root signal
 
+# 1. db connection check
+# 2. first root user check
+# 3. get user info
+
 @app.route('/')
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -36,7 +40,7 @@ def index():
     # check user info
     if session.get("user_info") is not None:
         page_config.set(comm_user_signin=True)
-        if session.get("root_signal")  is not None and session["root_signal"] == root_signal:
+        if session.get("root_signal") is not None and session["root_signal"] == root_signal:
             page_config.set(comm_root_signin=True)
     gallery_post = GalleryPost(page_config)
     
@@ -107,7 +111,7 @@ def post(mode=None):
     # check user info
     if session.get("user_info") is not None:
         page_config.set(comm_user_signin=True)
-        if session.get("root_signal")  is not None and session["root_signal"] == root_signal:
+        if session.get("root_signal") is not None and session["root_signal"] == root_signal:
             page_config.set(comm_root_signin=True)
 
     page_config.set(data_page_last_query = request.args.get("page"))
@@ -130,7 +134,10 @@ def post(mode=None):
         return render_template("gallerypost.html", page_config=page_config)
 
     if not page_config.get("comm_root_signin"):
-        return redirect(url_for('index'))
+        if page_config.get("comm_user_signin"):
+            return redirect(url_for('index'))
+        else:
+            return redirect(url_for('signin'))
 
     # root area
     #======================================================
@@ -141,8 +148,12 @@ def post(mode=None):
             image = request.files['image']
             image_name = str(datetime.now().strftime('%Y%m%d%H%M%S%f')) + '-' + image.filename
             image_path = os.path.join(img_root_path, image_name)
-            created = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            updated = created
+            updated = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            # check title maximum length
+            if len(title) > 255:
+                page_config.set(message = "maximum title length is 255 !!")
+                return render_template("write.html", page_config=page_config)
 
             # allow only image file
             if image.content_type.split('/')[0] != 'image':
@@ -150,7 +161,7 @@ def post(mode=None):
                 return render_template("write.html", page_config=page_config)
 
             # save image path and title
-            gallery_post.write(image, image_path, title, created, updated)
+            gallery_post.write(image, image_path, title, updated)
             return redirect(url_for('index'))
         return render_template("write.html", page_config=page_config)
 
@@ -168,21 +179,71 @@ def post(mode=None):
             image_path = os.path.join(img_root_path, image_name)
             updated = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+            # check title maximum length
+            if len(title) > 255:
+                page_config.set(message = "maximum title length is 255 !!")
+                return render_template("write.html", page_config=page_config)
+
             # allow only image file
             if image.content_type.split('/')[0] != 'image':
-                page_config.set(message = "can't load image, please check the format !!")
-                return render_template("modify.html", page_config=page_config)
+                if image.read() == b'':
+                    gallery_post.modify_title(result[0], title, updated)
+                    return redirect(url_for('index'))
+                else:
+                    page_config.set(message = "can't load image, please check the format !!")
+                    return render_template("modify.html", page_config=page_config)
             
             # save image path and title
-            gallery_post.modify(image, result[0], result[1], image_path, title, updated)
+            gallery_post.modify(image, result[0], result[2], image_path, title, updated)
             if request.args.get("page") is not None:
                 return redirect('/gallerypost/view?image_id=' + str(result[0]) + "&page=" + request.args.get("page"))
             return redirect(url_for('index'))
-
         return render_template("modify.html", page_config=page_config)
 
     return redirect(url_for('index'))
     #======================================================
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    page_config = PageConfig('Sign Up')
+
+    if session.get("user_info") is not None:
+        return redirect(url_for('index'))
+    
+    users = Users(page_config)
+
+    # check db_connection
+    if not users.db_connection:
+        return render_template("signup.html", page_config=page_config)
+    
+    # POST request
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        passwordcheck = request.form["passwordcheck"]
+        
+        # check maximum length
+        if len(email) > 128 or len(password) > 128:
+            page_config.set(message="email and password should be 128 characters !!")
+            return render_template("signup.html", page_config=page_config)
+        
+        # password confirm
+        if password != passwordcheck:
+            page_config.set(message = "Password is different !!")
+            return render_template("signup.html", page_config=page_config)
+        
+        # user check
+        if users.user_exist(email):
+            page_config.set(message = email + " already exist !!")
+            return render_template("signup.html", page_config=page_config)
+
+        # sign up root user
+        users.signup(False, email, password)
+        
+        # make session
+        session['user_info'] = request.form['email']
+        return redirect(url_for('index'))
+    return render_template("signup.html", page_config=page_config)
 
 # signin, logout method
 @app.route('/signin', methods=['GET', 'POST'])
@@ -203,6 +264,11 @@ def signin():
         email = request.form['email']
         password = request.form['password']
 
+        # check maximum length
+        if len(email) > 128 or len(password) > 128:
+            page_config.set(message="got worng length of email or password !!")
+            return render_template("signin.html", page_config=page_config)
+        
         user_signin, root_signin = users.signin(email, password)
 
         if user_signin:
@@ -242,6 +308,12 @@ def rootsignup():
         password = request.form["password"]
         passwordcheck = request.form["passwordcheck"]
         
+        # check maximum length
+        if len(email) > 128 or len(password) > 128:
+            page_config.set(message="email and password should be 128 characters !!")
+            return render_template("rootsignup.html", page_config=page_config)
+        
+        # password confirm
         if password != passwordcheck:
             page_config.set(message = "Password is different !!")
             return render_template("rootsignup.html", page_config=page_config)
